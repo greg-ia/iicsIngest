@@ -44,10 +44,6 @@ jobs:
           MYSQL_USER=${{ secrets.MYSQL_USER }}
           MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
           
-          SECRET_KEY=${{ secrets.SECRET_KEY }}
-          FLASK_DEBUG=${{ secrets.FLASK_DEBUG_HML }}
-          FLASK_PORTA=${{ secrets.FLASK_PORTA_HML }}
-           
           EOF
           
           # Configura o ambiente virtual
