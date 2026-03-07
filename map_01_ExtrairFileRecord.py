@@ -2,6 +2,11 @@ import os
 import zipfile
 import sys
 import json
+from dotenv import load_dotenv
+# Carregar variáveis de ambiente
+load_dotenv()
+
+config_path = os.getenv('CONFIG_PATH')
 
 # Função para carregar as configurações do arquivo JSON
 def load_config(config_path):
@@ -19,14 +24,13 @@ def load_config(config_path):
 # Função principal para extrair os arquivos do tipo fileRecord.json
 def ExtrairDimensional_bin(onda, pasta, deploy, deployiics):
     # Caminho para carregar o arquivo de configuração
-    config_path = os.getenv('CONFIG_PATH_ENGENHARIA', 'E://engenharia//config//config.json')
+    config_path = os.getenv('CONFIG_PATH_ENGENHARIA')
 
     # Tentar carregar as configurações
     config = load_config(config_path)
     
     try:
         # Chaves esperadas no arquivo de configuração
-        directory = config["directory"]
         dirDoubleCheck = config["dirDoubleCheck"]
         PathFileRecordsGrava = config["PathFileRecordsGrava"]
         PathFileRecordsDoubleCheckGrava = config["PathFileRecordsDoubleCheckGrava"]        

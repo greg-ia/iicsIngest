@@ -55,6 +55,7 @@ jobs:
             MYSQL_USER=${{ secrets.MYSQL_USER }}
             MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
             
+            CONFIG_PATH=${{ secrets.CONFIG_PATH }}
             EOF
             
             # Configura o ambiente virtual
