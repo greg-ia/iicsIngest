@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 config_path = os.getenv('CONFIG_PATH')
-
+print(config_path)
+exit(7)
 # Função para carregar as configurações do arquivo JSON
 def load_config(config_path):
     try:
