@@ -30,8 +30,8 @@ jobs:
           # Prepara e limpa o diretório hml
           rm -rf $HML_DIR/*
           mkdir -p $HML_DIR
-          cp *.py requirements.txt pyproject.toml $HML_DIR/
-          rm *.py requirements.txt pyproject.toml
+          cp *.py requirements.txt $HML_DIR/
+          rm *.py requirements.txt
                                                       
           cd $HML_DIR
           
