@@ -3,12 +3,13 @@ import zipfile
 import sys
 import json
 from dotenv import load_dotenv
+
 # Carregar variáveis de ambiente
 load_dotenv()
 
-config_path = os.getenv('CONFIG_PATH')
+# CORREÇÃO: Usar uma única variável de ambiente
+CONFIG_PATH_ENV = os.getenv('CONFIG_PATH')  # Esta é a que você tem no .env
 
-# Função para carregar as configurações do arquivo JSON
 def load_config(config_path):
     try:
         with open(config_path, 'r') as config_file:
@@ -21,13 +22,18 @@ def load_config(config_path):
         print(f"Error: Erro ao interpretar JSON do arquivo de configuração. Detalhes: {e}")
         sys.exit(1)
 
-# Função principal para extrair os arquivos do tipo fileRecord.json
 def ExtrairDimensional_bin(onda, pasta, deploy, deployiics):
-    # Caminho para carregar o arquivo de configuração
-    config_path = os.getenv('CONFIG_PATH_ENGENHARIA')
-
-    # Tentar carregar as configurações
-    config = load_config(config_path)
+    # CORREÇÃO: Usar CONFIG_PATH ao invés de CONFIG_PATH_ENGENHARIA
+    if CONFIG_PATH_ENV is None:
+        print("Error: Variável de ambiente CONFIG_PATH não está definida no arquivo .env")
+        print("Certifique-se de que o .env contém: CONFIG_PATH=/caminho/para/config")
+        sys.exit(1)
+    
+    # Construir o caminho completo para o config.json
+    config_file_path = os.path.join(CONFIG_PATH_ENV, 'config.json')
+    print(f"Procurando config em: {config_file_path}")  # Debug
+    
+    config = load_config(config_file_path)
     
     try:
         # Chaves esperadas no arquivo de configuração
@@ -50,6 +56,7 @@ def ExtrairDimensional_bin(onda, pasta, deploy, deployiics):
     # Garantir que o diretório de extração existe
     os.makedirs(CaminhoExtracao, exist_ok=True)
     
+    # Resto do código permanece IGUAL...
     # Identificar os arquivos ZIP para extração
     try:
         arquivos_zip = [f for f in os.listdir(caminho_zip) if f.endswith('.DTEMPLATE.zip')]
