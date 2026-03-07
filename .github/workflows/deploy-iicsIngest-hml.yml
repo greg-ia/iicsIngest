@@ -38,11 +38,11 @@ jobs:
           # Cria o arquivo .env (use seus segredos reais em vez de valores fixos)       
           cat > .env <<EOF
           ENV=${{ secrets.ENV_HML }}
-          MYSQL_RG_HOST=${{ secrets.MYSQL_RG_HOST }}
-          MYSQL_RG_PORTA=${{ secrets.MYSQL_RG_PORTA }}
-          MYSQL_RG_DATABASE=${{ secrets.MYSQL_RG_DATABASE }}
-          MYSQL_RG_USER=${{ secrets.MYSQL_RG_USER }}
-          MYSQL_RG_PASSWORD=${{ secrets.MYSQL_RG_PASSWORD }}
+          MYSQL_HOST=${{ secrets.MYSQL_HOST }}
+          MYSQL_PORTA=${{ secrets.MYSQL_PORTA }}
+          MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
+          MYSQL_USER=${{ secrets.MYSQL_USER }}
+          MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
           
           SECRET_KEY=${{ secrets.SECRET_KEY }}
           FLASK_DEBUG=${{ secrets.FLASK_DEBUG_HML }}
