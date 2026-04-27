@@ -8,6 +8,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TIMESTAMP=$(date +'%Y%m%d%H%M%S')
 LOG_FILE="/opt/projetos/logExecucaoJobs/iics_export_${TIMESTAMP}.log"
 
+# Diretório base de origem
+ORIGEM_DIR="/opt/projetos/origem"
+
 # Cores para output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -41,6 +44,41 @@ load_env_file() {
         echo -e "${RED}❌ Arquivo .env não encontrado: ${env_file}${NC}"
         return 1
     fi
+}
+
+# Função para limpar completamente o diretório de origem
+clean_origem_dir() {
+    log "${YELLOW}🧹 Limpando diretório de origem: ${ORIGEM_DIR}${NC}"
+    
+    # Verifica se o diretório existe
+    if [ ! -d "$ORIGEM_DIR" ]; then
+        log "${YELLOW}⚠ Diretório ${ORIGEM_DIR} não existe. Criando...${NC}"
+        mkdir -p "$ORIGEM_DIR"
+        return 0
+    fi
+    
+    # Remove todos os arquivos .zip
+    log "Removendo arquivos .zip..."
+    find "$ORIGEM_DIR" -maxdepth 1 -name "*.zip" -type f -delete 2>/dev/null || true
+    
+    # Remove todos os arquivos .tmp
+    log "Removendo arquivos .tmp..."
+    find "$ORIGEM_DIR" -maxdepth 1 -name "*.tmp" -type f -delete 2>/dev/null || true
+    
+    # Remove todos os diretórios descompactados (subdiretórios)
+    log "Removendo diretórios descompactados..."
+    find "$ORIGEM_DIR" -maxdepth 1 -type d -not -path "$ORIGEM_DIR" -exec rm -rf {} + 2>/dev/null || true
+    
+    # Remove arquivos temporários do sistema (vim, etc)
+    log "Removendo arquivos temporários..."
+    find "$ORIGEM_DIR" -maxdepth 1 -name ".*.swp" -delete 2>/dev/null || true
+    find "$ORIGEM_DIR" -maxdepth 1 -name "*.log" -delete 2>/dev/null || true
+    
+    # Remove qualquer outro arquivo que possa ter ficado
+    log "Removendo outros arquivos residuais..."
+    find "$ORIGEM_DIR" -maxdepth 1 -type f -delete 2>/dev/null || true
+    
+    log "${GREEN}✓ Limpeza do diretório ${ORIGEM_DIR} concluída${NC}"
 }
 
 # Função para verificar se uma variável está configurada
@@ -105,6 +143,9 @@ check_error() {
     fi
 }
 
+# Criar diretório de log se não existir
+mkdir -p "/opt/projetos/logExecucaoJobs"
+
 # Cabeçalho
 log "${GREEN}=== Iniciando exportação de dados IICS ===${NC}"
 log "Timestamp: $TIMESTAMP"
@@ -112,8 +153,8 @@ log "Total de jobs: ${#CODIGOS_JOB[@]}"
 log "Log salvando em: $LOG_FILE"
 echo ""
 
-# Limpar arquivos temporários antigos (opcional)
-rm -rf /opt/projetos/origem/*.* 2>/dev/null || true
+# Limpar diretório de origem ANTES de começar
+clean_origem_dir
 
 # Loop principal
 for codigo in "${CODIGOS_JOB[@]}"; do
@@ -126,7 +167,7 @@ for codigo in "${CODIGOS_JOB[@]}"; do
         -p "$SENHA_IICS" \
         -r us \
         -a "Explore/${codigo}.Project" \
-        -z "/opt/projetos/origem/${codigo}-${TIMESTAMP}.zip" \
+        -z "${ORIGEM_DIR}/${codigo}-${TIMESTAMP}.zip" \
         2>&1)
     
     EXIT_CODE=$?
@@ -148,13 +189,22 @@ for codigo in "${CODIGOS_JOB[@]}"; do
     log "${GREEN}✓ Exportação do código ${codigo} concluída com sucesso${NC}"
     
     # Extrair o arquivo zip
-    ZIP_FILE="/opt/projetos/origem/${codigo}-${TIMESTAMP}.zip"
-    EXTRACT_DIR="/opt/projetos/origem/${codigo}"
+    ZIP_FILE="${ORIGEM_DIR}/${codigo}-${TIMESTAMP}.zip"
+    EXTRACT_DIR="${ORIGEM_DIR}/${codigo}"
     
     if [ -f "$ZIP_FILE" ]; then
         log "📦 Extraindo arquivo: ${ZIP_FILE}"
+        
+        # Criar diretório de extração se não existir
+        mkdir -p "$EXTRACT_DIR"
+        
+        # Extrair o zip
         unzip -q "$ZIP_FILE" -d "$EXTRACT_DIR"
         log "${GREEN}✓ Extração concluída para: ${EXTRACT_DIR}${NC}"
+        
+        # Opcional: remover o arquivo zip após extração para economizar espaço
+        # rm -f "$ZIP_FILE"
+        # log "Arquivo ZIP removido: ${ZIP_FILE}"
     else
         log "${RED}✗ Arquivo ZIP não encontrado: ${ZIP_FILE}${NC}"
         exit 1
