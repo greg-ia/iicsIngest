@@ -12,7 +12,7 @@ set -u  # Sai se variável não definida
 
 # Diretórios
 BASE_DIR="/opt/engenharia/iicsIngest/hml"
-LOG_DIR="/opt/engenharia/logs"
+LOG_DIR="/opt/projetos/logExecucaoJobs"
 TIMESTAMP=$(date +'%Y%m%d_%H%M%S')
 LOG_FILE="${LOG_DIR}/iics_pipeline_${TIMESTAMP}.log"
 

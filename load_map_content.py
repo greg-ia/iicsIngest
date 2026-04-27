@@ -434,10 +434,8 @@ class ContentLoader:
                 print("\n✨ Processamento concluído com SUCESSO!")
             elif processados > 0:
                 print(f"\n⚠️  Processamento concluído com {total_arquivos - processados} falha(s)!")
-                sys.exit(1)
             else:
                 print("\n⚠️  Nenhum arquivo foi processado!")
-                sys.exit(1)
             
         except Exception as e:
             print(f"\n❌ Erro inesperado: {e}")
