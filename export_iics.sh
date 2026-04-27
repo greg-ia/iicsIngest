@@ -57,6 +57,8 @@ log "Total de jobs: ${#CODIGOS_JOB[@]}"
 log "Log salvando em: $LOG_FILE"
 echo ""
 
+rm -rf *.*
+
 # Loop principal
 for codigo in "${CODIGOS_JOB[@]}"; do
     log "${YELLOW}>>> Extraindo JSON da onda código ${codigo} Dimensional${NC}"
@@ -89,6 +91,8 @@ for codigo in "${CODIGOS_JOB[@]}"; do
     
     log "${GREEN}✓ Exportação do código ${codigo} concluída com sucesso${NC}"
     
+    unzip -q /opt/projetos/origem/${codigo}-${TIMESTAMP}.zip -d /opt/projetos/origem/${codigo}
+
     # Aguarda 10 segundos para evitar colisão e rate limit
     if [ "$codigo" != "${CODIGOS_JOB[-1]}" ]; then
         log "${YELLOW}⚠ Aguardando 10 segundos antes do próximo job...${NC}"
