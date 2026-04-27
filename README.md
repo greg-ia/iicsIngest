@@ -40,8 +40,8 @@ O fluxo de dados segue uma estrutura linear de quatro etapas principais:
 iicsIngest/
 ├── extract_iics.sh                 # Script principal de extração (Shell)
 ├── extract_iics_file_records.py    # Extrator de fileRecords
-├── extract_iics_binary.py          # Extrator de arquivos binários
-├── extract_iics_mtt_tasks.py       # Extrator de MTT tasks
+├── iics_s_task_extractor.py        # Extrator de s_task (sessions)
+├── iics_maps_extractor.py          # Extrator de Mapas
 ├── extract_iics_connections.py     # Extrator de conexões
 ├── file_record_loader.py           # Loader de fileRecords para o MySQL
 ├── load_transformation.py          # Loader de transformations
@@ -198,4 +198,4 @@ Você pode executar o fluxo manualmente seguindo esta ordem:
 Este projeto está sob a licença **MIT**. Consulte o arquivo `LICENSE` para mais informações.
 
 ---
-**Desenvolvido por [Seu Nome]** - [Greg Oak](https://github.com/greg.ia)
+**Desenvolvido por:** - [Greg Oak](https://github.com/greg.ia)
