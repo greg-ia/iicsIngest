@@ -30,10 +30,11 @@ jobs:
           # Prepara e limpa o diretório hml
           rm -rf $HML_DIR/*
           mkdir -p $HML_DIR
-          cp *.py requirements.txt $HML_DIR/
-          rm *.py requirements.txt
+          cp *.sh *.py requirements.txt $HML_DIR/
+          rm *.sh *.py requirements.txt
                                                       
           cd $HML_DIR
+          chmod +x *.sh
           
           # Cria o arquivo .env (use seus segredos reais em vez de valores fixos)       
           cat > .env <<EOF
