@@ -14,8 +14,8 @@ jobs:
         username: ${{ secrets.VPS_USERNAME }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
-          set -e  # Sai imediatamente se qualquer comando falhar
-                  
+          set -e
+          
           # Diretorios
           BASE_DIR="/opt/engenharia/iicsIngest"
           HML_DIR="$BASE_DIR/hml"
@@ -23,7 +23,7 @@ jobs:
           # Ir para a raiz do repositorio
           cd $BASE_DIR
 
-          # Baixa as últimas alterações do remote main e redefine o branch local para corresponder exatamente
+          # Baixa as últimas alterações do remote main
           git fetch origin main
           git reset --hard origin/main
           
@@ -36,16 +36,23 @@ jobs:
           cd $HML_DIR
           chmod +x *.sh
           
-          # Cria o arquivo .env (use seus segredos reais em vez de valores fixos)       
+          # Cria o arquivo .env com todas as variáveis
           cat > .env <<EOF
+          # Ambiente
           ENV=${{ secrets.ENV_HML }}
-          MYSQL_HOST=${{ secrets.MYSQL_HOST }}
-          MYSQL_PORTA=${{ secrets.MYSQL_PORTA }}
-          MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}
-          MYSQL_USER=${{ secrets.MYSQL_USER }}
-          MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }}
+                  
+          # IICS Credentials
+          USUARIO_IICS=${{ secrets.USUARIO_IICS }}
+          SENHA_IICS=${{ secrets.SENHA_IICS }}
           
+          # Configurações adicionais
           CONFIG_PATH=${{ secrets.CONFIG_PATH }}
+          
+          # MySQL para Ruleguardian
+          MYSQL_RG_HOST=${{ secrets.MYSQL_RG_HOST }}
+          MYSQL_RG_USER=${{ secrets.MYSQL_RG_USER }}
+          MYSQL_RG_PASSWORD=${{ secrets.MYSQL_RG_PASSWORD }}
+          MYSQL_RG_DATABASE=${{ secrets.MYSQL_RG_DATABASE }}
           EOF
           
           # Configura o ambiente virtual
