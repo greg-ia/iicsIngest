@@ -24,9 +24,6 @@ fi
 
 # Lista de códigos dos jobs
 CODIGOS_JOB=(
-    "653_UME_RECEITA"
-    "673_UME_FATURAMENTO"
-    "674_UME_RENTABILIDADE"
     "684_UME_TRAFEGO"
     "702_UME_Disponibilidades"
     "781_CONEXAO_TORPEDO_NOVA_PLATAFORMA"
