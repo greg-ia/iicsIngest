@@ -6,7 +6,7 @@
 # Configurações
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TIMESTAMP=$(date +'%Y%m%d%H%M%S')
-LOG_FILE="/opt/projetos/logExecucaoJobs/iics_export_${TIMESTAMP}.log"
+LOG_FILE="/opt/projetos/logExecucaoJobs/iics_export.log"
 
 # Diretório base de origem
 ORIGEM_DIR="/opt/projetos/origem"
