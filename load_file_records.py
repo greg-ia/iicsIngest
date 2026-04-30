@@ -6,6 +6,7 @@ Processa arquivos extraídos do IICS e carrega na tabela transformation_file_rec
 
 import json
 import os
+import re
 import sys
 from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional, Tuple
@@ -268,24 +269,16 @@ class FileRecordProcessor:
         """
         self.db_manager = db_manager
         self.time_converter = TimeConverter()
-        
+         
     def extract_codes_from_name(self, name: str) -> Tuple[Optional[str], Optional[str]]:
-        """
-        Extrai CodOnda e CodProcess do nome do arquivo
+        # Encontra todos os blocos numéricos no nome
+        numbers = re.findall(r'\d+', name)
         
-        Formato esperado: algo_CODONDA_CODPROCESS_...
-        
-        Args:
-            name: Nome do arquivo
-            
-        Returns:
-            Tuple (CodOnda, CodProcess)
-        """
-        parts = name.split('_')
-        cod_onda = parts[3] if len(parts) > 3 else None
-        cod_process = parts[4] if len(parts) > 4 else None
+        cod_onda = numbers[0] if len(numbers) > 0 else None
+        cod_process = numbers[1] if len(numbers) > 1 else None
+   
         return cod_onda, cod_process
-    
+
     def parse_record(self, record: Dict, filename: str) -> Optional[Dict]:
         """
         Converte um registro JSON para o formato de banco de dados
