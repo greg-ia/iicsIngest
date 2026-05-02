@@ -9,6 +9,14 @@ from dotenv import load_dotenv
 # ==================== CONFIGURAÇÃO INICIAL ====================
 load_dotenv()
 
+config_path_env = os.getenv('CONFIG_PATH', '')
+
+# Se a variável já aponta para um arquivo .json, usa direto; senão, assume que é diretório e monta o caminho
+if config_path_env.endswith('.json'):
+    config_file_path = config_path_env
+else:
+    config_file_path = os.path.join(config_path_env, 'config.json')
+
 class CustomLogger:
     def __init__(self):
         self.level_map = {
@@ -90,20 +98,32 @@ if __name__ == "__main__":
         logger.log("Variáveis MYSQL_RG_* não definidas no .env", "ERROR")
         sys.exit(1)
 
-    # 3. Caminho do JSON via gregLib
+    # 3. Caminho do JSON via leitura direta do config.json
+    config_file_path = os.getenv('CONFIG_PATH', '')
+    if config_file_path.endswith('.json'):
+        config_file_path = config_file_path  # já é o arquivo
+    else:
+        config_file_path = os.path.join(config_file_path, 'config.json')
+
     try:
-        config = carregar_configuracao()
-        logger.log("Configuração carregada", "INFO")
+        with open(config_file_path, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+        logger.log(f"Configuração carregada de {config_file_path}", "INFO")
     except Exception as e:
-        logger.log(f"Erro ao carregar configuração: {e}", "ERROR")
+        logger.log(f"Erro ao ler configuração: {e}", "ERROR")
         sys.exit(1)
 
     json_file_path = config.get("json_file_path")
     if not json_file_path:
-        logger.log("json_file_path não encontrado na configuração", "ERROR")
+        logger.log("json_file_path não encontrado no config.json", "ERROR")
         sys.exit(1)
 
-    caminho_json = f"{json_file_path}/{cod_projeto}_{nme_projeto}/exportMetadata.v2.json"
+    # Se o caminho for relativo, torna absoluto com base no diretório do config.json
+    if not os.path.isabs(json_file_path):
+        base_dir = os.path.dirname(config_file_path)
+        json_file_path = os.path.join(base_dir, json_file_path)
+
+    caminho_json = os.path.join(json_file_path, f"{cod_projeto}_{nme_projeto}", "exportMetadata.v2.json")
     logger.log(f"JSON: {caminho_json}", "INFO")
 
     # 4. Carregar JSON
@@ -125,7 +145,7 @@ if __name__ == "__main__":
         cursor.execute("DELETE FROM fingerhard.exported_objects where cod_projeto = %s", (cod_projeto,))
         logger.log(f"Tabela fingerhard.exported_objects truncada para projeto {cod_projeto}", "INFO")
         conn.commit()
-        
+
         logger.log("Tabela fingerhard.exported_objects truncada", "INFO")
 
         insert_sql = """
