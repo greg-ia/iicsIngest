@@ -178,12 +178,13 @@ if __name__ == "__main__":
             additional_info_json = json.dumps(additional_info, ensure_ascii=False)
 
             created_at = datetime.datetime.now()
-
-            cursor.execute(insert_sql, (
-                object_guid, object_name, object_type, path,
-                description, content_type, document_state,
-                additional_info_json, final_cod_projeto, final_cod_processo, created_at
-            ))
+            
+            if cod_projeto == final_cod_projeto:
+                cursor.execute(insert_sql, (
+                    object_guid, object_name, object_type, path,
+                    description, content_type, document_state,
+                    additional_info_json, final_cod_projeto, final_cod_processo, created_at
+                ))
 
         conn.commit()
         logger.log(f"{len(objetos)} registros inseridos com sucesso", "INFO")
