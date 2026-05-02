@@ -185,9 +185,12 @@ main() {
         log "STEP" "📌 Processando projeto: ${code}"
         
         # Executar extratores para o projeto
+        log "INFO" "   Executando iics_exported_objects.py"
+        run_python_script "iics_exported_objects.py" "Extrator de Object Lists" "${code}" || true
+        
         log "INFO" "   Executando iics_maps_extractor.py"
         run_python_script "iics_maps_extractor.py" "Extrator de Maps" "${code}" || true
-        
+
         log "INFO" "   Executando iics_connection_extractor.py"
         run_python_script "iics_connection_extractor.py" "Extrator de Conexões" "${code}" || true
         
